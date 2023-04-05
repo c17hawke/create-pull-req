@@ -20,7 +20,7 @@ jobs:
     
     - name: Check commit message
       run: |
-        if [[ "$(git log -1 --pretty=format:'%s')" == "Update code" ]]; then
+        if [[ "${{ github.event.head_commit.message }}" == "Update code" ]]; then
           echo "Commit message is 'Update code'. Skipping remaining steps."
           exit 0
         fi
