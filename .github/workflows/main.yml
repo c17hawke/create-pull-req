@@ -11,35 +11,34 @@ permissions:
   pull-requests: write
   
 jobs:
-  generate_pull_request:
+  create_pull_request:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
     
-    - name: Run code generation
+    - name: Create and switch to new branch
+      run: |
+        git checkout -b my-feature-branch
+        git push origin my-feature-branch
+        
+    - name: Make changes
       run: |
         python main.py
         
     - name: Commit and push changes
       run: |
-        git config --global user.name "c17hawke"
-        git config --global user.email "sunny.c17hawke@gmail.com"
         git add .
-        git commit -m "Generated changes"
-        git push
+        git commit -m "Update code"
+        git push origin my-feature-branch
         
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Generated changes"
-        title: "Generated changes"
-        branch: "main"
+        commit-message: "Update code"
+        title: "My Pull Request"
+        body: "Please review my changes"
         base: "main"
-        
-    - name: Notify user for review
-      run: |
-        # Add your notification command here
-        # For example: send_notification.sh
+        head: "my-feature-branch"
