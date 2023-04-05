@@ -17,15 +17,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    
-    - name: Check commit message
-      run: |
-        if [[ "${{ github.event.head_commit.message }}" == "Update code" ]]; then
-          echo "Commit message is 'Update code'. Skipping remaining steps."
-          exit 0
-        fi
 
     - name: Create and switch to new branch
+      if: ${{ github.event.head_commit.message  == "Update code" }}
       run: |
         git checkout -b my-feature-branch
         git push origin my-feature-branch
