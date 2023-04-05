@@ -1,0 +1,40 @@
+name: Generate Pull Request
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate_pull_request:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Run code generation
+      run: |
+        python main.py
+        
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "c17hawke"
+        git config --global user.email "sunny.c17hawke@gmail.com"
+        git add .
+        git commit -m "Generated changes"
+        git push
+        
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "Generated changes"
+        title: "Generated changes"
+        branch: "main"
+        base: "main"
+        
+    - name: Notify user for review
+      run: |
+        # Add your notification command here
+        # For example: send_notification.sh
